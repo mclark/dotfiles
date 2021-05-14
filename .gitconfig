@@ -1,0 +1,24 @@
+[user]
+	name = Matt Clark
+	email = 44023+mclark@users.noreply.github.com
+[github]
+	user = mclark
+[push]
+	default = simple
+[alias]
+	co = checkout
+	ci = commit
+	st = status
+	br = branch
+	praise = blame
+	cleanup = !git branch --merged master | grep -v 'master$' | xargs git branch -d
+	branchdate = !git for-each-ref --sort='-authordate:iso8601' --format=' %(authordate:relative)%09%(refname:short)' refs/heads
+	praise = blame
+
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
+[fetch]
+	prune = true
