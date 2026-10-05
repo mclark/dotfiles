@@ -7,7 +7,7 @@ description: Design, place, migrate, and validate agent instructions and skills.
 
 ## Decide what persists
 
-Persist guidance when it resolves repeated friction, prevents meaningful risk, or provides a capability that would otherwise be rediscovered. Prefer removing, reshaping, or reusing existing guidance over adding another rule.
+Persist guidance when it applies broadly across future tasks in its scope, remains stable beyond the current change, and resolves repeated friction, meaningful risk, or recurring discovery. Prefer removing, reshaping, or reusing existing guidance over adding another rule.
 
 ## Give behavior one owner
 

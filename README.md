@@ -21,7 +21,7 @@ Missing Jujutsu user name or email values are copied from global Git configurati
 - `.agents/skills` contains portable Agent Skills.
 - Harness-specific behavior belongs in that harness's configuration package.
 - Private work behavior belongs in a private overlay.
-- Repository-specific guidance stays with the repository that owns it.
+- Stable guidance that repeatedly applies across future tasks in one repository may live there. One-off task context, temporary workarounds, and facts that are cheap to rediscover do not meet the persistence bar.
 - Credentials, sessions, caches, binaries, and generated state remain untracked.
 
 The installer links portable skills into `~/.agents/skills` and shared instructions into Copilot's personal instruction path. It preserves unmanaged paths and rejects skill-name collisions.
