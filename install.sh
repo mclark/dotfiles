@@ -121,6 +121,17 @@ ensure_jj() {
   esac
 }
 
+ensure_dotfiles_jj_repo() {
+  if [ ! -d "$DOTFILES_DIR/.git" ] || [ -d "$DOTFILES_DIR/.jj" ]; then
+    return 0
+  fi
+
+  if ! jj git init --colocate "$DOTFILES_DIR"; then
+    agent_config_warn "Failed to initialize $DOTFILES_DIR for Jujutsu"
+    return 1
+  fi
+}
+
 git_config_value() {
   key="$1"
 
@@ -204,8 +215,14 @@ remove_mise_configuration() {
 
 if ! ensure_jj; then
   failures=$((failures + 1))
-elif ! ensure_jj_identity; then
-  failures=$((failures + 1))
+else
+  if ! ensure_dotfiles_jj_repo; then
+    failures=$((failures + 1))
+  fi
+
+  if ! ensure_jj_identity; then
+    failures=$((failures + 1))
+  fi
 fi
 
 if ! remove_mise_configuration; then
