@@ -2,6 +2,8 @@
 
 Public, portable development and agent configuration.
 
+The installer leaves an existing Jujutsu installation alone. When `jj` is missing, it installs it with Homebrew on macOS or downloads the latest official, checksum-verified Linux release in a Codespace or devcontainer.
+
 ## Agent configuration
 
 ```text
@@ -28,4 +30,4 @@ The installer links portable skills into `~/.agents/skills` and shared instructi
 ./install.sh
 ```
 
-The installer is idempotent. Existing unmanaged dotfiles are left in place with a warning.
+The installer is idempotent. Existing unmanaged dotfiles are left in place with a warning. The former mise-based Jujutsu configuration is removed only when it points back to this repository.
