@@ -1,22 +1,66 @@
 #!/bin/sh
+set -u
 
-# Run by github/github codespaces after starting
-
-# install mise-en-place
-curl https://mise.run | sh
-
-DOTFILES_DIR="$(realpath .)"
+DOTFILES_DIR="$(CDPATH= cd -- "$(dirname "$0")" && pwd)"
 TARGET_HOME="$HOME"
+failures=0
 
-ln -sf "${DOTFILES_DIR}/.gitconfig" "${TARGET_HOME}/.gitconfig"
+. "$DOTFILES_DIR/lib/agent-config.sh"
 
-# Ensure .config/mise directory exists
-mkdir -p "${TARGET_HOME}/.config/mise"
+install_mise() {
+  if command -v mise >/dev/null 2>&1 || [ -x "$TARGET_HOME/.local/bin/mise" ]; then
+    return 0
+  fi
 
-MISE_SOURCE="${DOTFILES_DIR}/mise.toml"
-MISE_TARGET="${TARGET_HOME}/.config/mise/mise.toml"
+  if ! command -v curl >/dev/null 2>&1; then
+    agent_config_warn "curl is unavailable; cannot install mise"
+    return 1
+  fi
 
-ln -sf "$MISE_SOURCE" "$MISE_TARGET"
+  curl -fsSL https://mise.run | sh
+}
 
-echo "eval \"\$(/home/codespace/.local/bin/mise activate zsh)\"" >> ~/.zshrc
+ensure_zsh_activation() {
+  zshrc="$TARGET_HOME/.zshrc"
+  activation='eval "$($HOME/.local/bin/mise activate zsh)"'
 
+  touch "$zshrc"
+  if ! grep -Fqx "$activation" "$zshrc"; then
+    printf '%s\n' "$activation" >> "$zshrc"
+  fi
+}
+
+if ! install_mise; then
+  failures=$((failures + 1))
+fi
+
+if [ -e "$TARGET_HOME/.gitconfig" ] && [ ! -L "$TARGET_HOME/.gitconfig" ]; then
+  agent_config_warn "Leaving unmanaged file $TARGET_HOME/.gitconfig in place"
+elif ! agent_config_link "$DOTFILES_DIR/.gitconfig" "$TARGET_HOME/.gitconfig"; then
+  failures=$((failures + 1))
+fi
+
+if ! agent_config_link "$DOTFILES_DIR/mise.toml" "$TARGET_HOME/.config/mise/mise.toml"; then
+  failures=$((failures + 1))
+fi
+
+if ! agent_config_link \
+  "$DOTFILES_DIR/.agents/AGENTS.md" \
+  "$TARGET_HOME/.copilot/copilot-instructions.md"; then
+  failures=$((failures + 1))
+fi
+
+if ! agent_config_install_skills "$DOTFILES_DIR/.agents/skills"; then
+  failures=$((failures + 1))
+fi
+
+if ! ensure_zsh_activation; then
+  failures=$((failures + 1))
+fi
+
+if [ "$failures" -gt 0 ]; then
+  agent_config_warn "Dotfiles installation completed with $failures issue(s)"
+  exit 1
+fi
+
+printf 'Dotfiles installed successfully.\n'
