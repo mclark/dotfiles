@@ -4,6 +4,8 @@ Public, portable development and agent configuration.
 
 The installer leaves an existing Jujutsu installation alone. When `jj` is missing, it installs it with Homebrew on macOS or downloads the latest official, checksum-verified Linux release in a Codespace or devcontainer.
 
+Missing Jujutsu user name or email values are copied from global Git configuration. Existing Jujutsu identity values are preserved, and the public `.gitconfig` provides a fallback for fresh environments.
+
 ## Agent configuration
 
 ```text

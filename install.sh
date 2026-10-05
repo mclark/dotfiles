@@ -121,6 +121,55 @@ ensure_jj() {
   esac
 }
 
+git_config_value() {
+  key="$1"
+
+  if command -v git >/dev/null 2>&1; then
+    value="$(git config --global --get "$key" 2>/dev/null || true)"
+    if [ -n "$value" ]; then
+      printf '%s\n' "$value"
+      return 0
+    fi
+
+    value="$(git config --file "$DOTFILES_DIR/.gitconfig" --get "$key" 2>/dev/null || true)"
+    if [ -n "$value" ]; then
+      printf '%s\n' "$value"
+      return 0
+    fi
+  fi
+
+  return 1
+}
+
+ensure_jj_identity_value() {
+  identity_key="$1"
+
+  if [ -n "$(jj config list --user "$identity_key" 2>/dev/null)" ]; then
+    return 0
+  fi
+
+  identity_value="$(git_config_value "$identity_key")" || {
+    agent_config_warn "Cannot configure Jujutsu $identity_key because no Git value is available"
+    return 1
+  }
+
+  jj config set --user "$identity_key" "$identity_value"
+}
+
+ensure_jj_identity() {
+  identity_failures=0
+
+  if ! ensure_jj_identity_value user.name; then
+    identity_failures=$((identity_failures + 1))
+  fi
+
+  if ! ensure_jj_identity_value user.email; then
+    identity_failures=$((identity_failures + 1))
+  fi
+
+  return "$identity_failures"
+}
+
 remove_mise_configuration() {
   mise_target="$TARGET_HOME/.config/mise/mise.toml"
   if [ -L "$mise_target" ] && [ "$(readlink "$mise_target")" = "$DOTFILES_DIR/mise.toml" ]; then
@@ -154,6 +203,8 @@ remove_mise_configuration() {
 }
 
 if ! ensure_jj; then
+  failures=$((failures + 1))
+elif ! ensure_jj_identity; then
   failures=$((failures + 1))
 fi
 
