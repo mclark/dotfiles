@@ -12,3 +12,7 @@
 ## Version Control
 
 - Use Jujutsu (`jj`) for version control in every repository. Use Git only when explicitly requested or when the required operation has no Jujutsu equivalent.
+
+## Commit Attribution
+
+- Do not add a Copilot `Co-authored-by` trailer to commits or Jujutsu revision descriptions.
