@@ -3,6 +3,7 @@ set -u
 
 DOTFILES_DIR="$(CDPATH= cd -- "$(dirname "$0")" && pwd)"
 TARGET_HOME="$HOME"
+ZSH_CUSTOM_DIR="${ZSH_CUSTOM_DIR:-$TARGET_HOME/.oh-my-zsh/custom}"
 failures=0
 
 . "$DOTFILES_DIR/lib/agent-config.sh"
@@ -205,6 +206,11 @@ remove_mise_configuration() {
     return 1
   fi
 
+  if cmp -s "$zshrc" "$temporary"; then
+    rm -f "$temporary"
+    return 0
+  fi
+
   if mode="$(stat -f '%Lp' "$zshrc" 2>/dev/null)" \
     || mode="$(stat -c '%a' "$zshrc" 2>/dev/null)"; then
     chmod "$mode" "$temporary"
@@ -242,6 +248,12 @@ if ! agent_config_link \
 fi
 
 if ! agent_config_install_skills "$DOTFILES_DIR/.agents/skills"; then
+  failures=$((failures + 1))
+fi
+
+if ! agent_config_link \
+  "$DOTFILES_DIR/shell/jj-prompt.zsh" \
+  "$ZSH_CUSTOM_DIR/jj-prompt.zsh"; then
   failures=$((failures + 1))
 fi
 

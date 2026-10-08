@@ -6,6 +6,12 @@ The installer leaves an existing Jujutsu installation alone. When `jj` is missin
 
 Missing Jujutsu user name or email values are copied from global Git configuration. Existing Jujutsu identity values are preserved, and the public `.gitconfig` provides a fallback for fresh environments.
 
+## Shell prompt
+
+The installer links a native zsh prompt into Oh My Zsh's custom configuration directory. The prompt shows the current Jujutsu change ID, local bookmarks, and conflicts. A yellow `git-only` marker identifies Git checkouts that have not been initialized for Jujutsu.
+
+Repository metadata is cached and refreshed on directory changes or after `jj` and `git` commands. Prompt reads use `--ignore-working-copy`, so rendering never snapshots or mutates the working copy. Override the installation directory with `ZSH_CUSTOM_DIR` when Oh My Zsh uses a nonstandard path.
+
 ## Agent configuration
 
 ```text
