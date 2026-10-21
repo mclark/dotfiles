@@ -2,6 +2,33 @@
 set -eu
 
 DOTFILES_DIR="$(CDPATH= cd -- "$(dirname "$0")" && pwd)"
+upgrade=0
+
+usage() {
+  printf 'Usage: %s [--upgrade]\n' "$0"
+}
+
+case "${1:-}" in
+  "")
+    ;;
+  --upgrade)
+    upgrade=1
+    shift
+    ;;
+  -h|--help)
+    usage
+    exit 0
+    ;;
+  *)
+    usage >&2
+    exit 2
+    ;;
+esac
+
+if [ "$#" -ne 0 ]; then
+  usage >&2
+  exit 2
+fi
 
 warn() {
   printf 'Warning: %s\n' "$*" >&2
@@ -94,5 +121,18 @@ ensure_chezmoi() {
   esac
 }
 
+if [ "$(uname -s)" = "Darwin" ]; then
+  ensure_homebrew
+fi
+
 ensure_chezmoi
 chezmoi init --apply --source "$DOTFILES_DIR"
+
+if [ "$upgrade" -eq 1 ]; then
+  if [ "$(uname -s)" != "Darwin" ]; then
+    warn "--upgrade is only supported on macOS"
+    exit 2
+  fi
+
+  brew bundle upgrade --file "$HOME/.Brewfile"
+fi

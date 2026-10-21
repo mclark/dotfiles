@@ -1,0 +1,20 @@
+{{- if eq .chezmoi.os "darwin" -}}
+#!/bin/sh
+set -eu
+
+# Brewfile hash: {{ include "dot_Brewfile" | sha256sum }}
+if [ -x /opt/homebrew/bin/brew ]; then
+  brew=/opt/homebrew/bin/brew
+elif [ -x /usr/local/bin/brew ]; then
+  brew=/usr/local/bin/brew
+else
+  printf 'Homebrew is unavailable; cannot apply %s\n' "$HOME/.Brewfile" >&2
+  exit 1
+fi
+
+HOMEBREW_NO_AUTO_UPDATE=1 \
+  "$brew" bundle install --no-upgrade --file "$HOME/.Brewfile"
+{{- else -}}
+#!/bin/sh
+exit 0
+{{- end }}

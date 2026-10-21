@@ -1,16 +1,67 @@
 # dotfiles
 
-Public, portable development and agent configuration.
+Public, portable development and agent configuration managed with chezmoi.
 
-The installer leaves an existing Jujutsu installation alone. When `jj` is missing, it installs it with Homebrew on macOS or downloads the latest official, checksum-verified Linux release in a Codespace or devcontainer.
+## Install
 
-Missing Jujutsu user name or email values are copied from global Git configuration. Existing Jujutsu identity values are preserved, and the public `.gitconfig` provides a fallback for fresh environments.
+```bash
+./install.sh
+```
 
-## Shell prompt
+The bootstrap installs Homebrew on macOS when needed, installs chezmoi, and
+applies this checkout as the chezmoi source. On Linux, chezmoi is installed as a
+standalone binary in `~/.local/bin`.
 
-The installer links a native zsh prompt into Oh My Zsh's custom configuration directory. The prompt shows the current Jujutsu change ID, local bookmarks, and conflicts. A yellow `git-only` marker identifies Git checkouts that have not been initialized for Jujutsu.
+Pass `--upgrade` to explicitly upgrade the packages declared in the Brewfile
+after applying the dotfiles:
 
-Repository metadata is cached and refreshed on directory changes or after `jj` and `git` commands. Prompt reads use `--ignore-working-copy`, so rendering never snapshots or mutates the working copy. Override the installation directory with `ZSH_CUSTOM_DIR` when Oh My Zsh uses a nonstandard path.
+```bash
+./install.sh --upgrade
+```
+
+The source state lives in `home/`, selected by `.chezmoiroot`. Files use
+chezmoi's standard source-state names such as `dot_gitconfig`, `dot_zshrc`, and
+`symlink_...`.
+
+## macOS tooling
+
+`~/.Brewfile` declares the baseline macOS tools:
+
+- chezmoi
+- Jujutsu
+- Herdr
+- Pi
+- Ghostty
+
+Chezmoi runs `brew bundle install --no-upgrade` whenever the Brewfile changes.
+It installs missing dependencies without cleaning up unrelated packages or
+forcing upgrades of installed tools. Upgrades occur only when requested with
+`./install.sh --upgrade`.
+
+## Shell
+
+Oh My Zsh is managed as a chezmoi archive external and refreshed weekly.
+Generated cache files are left outside chezmoi's ownership. Custom configuration
+lives at `~/.config/oh-my-zsh/custom`, where chezmoi installs the
+Jujutsu-aware prompt.
+
+The managed `.zshrc` enables the Git and Jujutsu plugins, initializes Homebrew
+on Apple silicon, adds `~/.local/bin` to `PATH`, and sources an optional
+unmanaged `~/.zshrc.local` for machine-specific settings.
+
+The prompt shows the current Jujutsu change ID, local bookmarks, and conflicts.
+A yellow `git-only` marker identifies Git checkouts that have not been
+initialized for Jujutsu. Repository metadata is cached and refreshed on
+directory changes or after `jj` and `git` commands. Prompt reads use
+`--ignore-working-copy`, so rendering never snapshots or mutates the working
+copy.
+
+## Jujutsu
+
+After applying files, chezmoi initializes this checkout as a colocated Jujutsu
+repository when needed. Missing Jujutsu user name or email values are copied
+from the managed Git configuration; existing Jujutsu identity values are
+preserved.
 
 ## Agent configuration
 
@@ -23,19 +74,10 @@ Repository metadata is cached and refreshed on directory changes or after `jj` a
     managing-agent-configuration/
 ```
 
-- `.agents/AGENTS.md` contains behavior shared across harnesses.
-- `.agents/skills` contains portable Agent Skills.
-- Harness-specific behavior belongs in that harness's configuration package.
-- Private work behavior belongs in a private overlay.
-- Stable guidance that repeatedly applies across future tasks in one repository may live there. One-off task context, temporary workarounds, and facts that are cheap to rediscover do not meet the persistence bar.
-- Credentials, sessions, caches, binaries, and generated state remain untracked.
+Chezmoi creates per-skill links in `~/.agents/skills` and links the shared
+instructions to `~/.copilot/copilot-instructions.md`. Harness-specific behavior
+belongs in that harness's configuration package, and private work behavior
+belongs in a private overlay.
 
-The installer links portable skills into `~/.agents/skills` and shared instructions into Copilot's personal instruction path. It preserves unmanaged paths and rejects skill-name collisions.
-
-## Install
-
-```bash
-./install.sh
-```
-
-The installer is idempotent. Existing unmanaged dotfiles are left in place with a warning. The former mise-based Jujutsu configuration is removed only when it points back to this repository.
+Credentials, sessions, caches, binaries, generated state, and private
+configuration remain untracked.

@@ -1,0 +1,6 @@
+brew "chezmoi"
+brew "jj"
+brew "herdr"
+brew "pi-coding-agent"
+
+cask "ghostty"
