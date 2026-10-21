@@ -1,0 +1,27 @@
+#!/bin/sh
+set -eu
+
+if ! command -v jj >/dev/null 2>&1; then
+  exit 0
+fi
+
+repository_root="{{ .chezmoi.workingTree }}"
+if [ -d "$repository_root/.git" ] && [ ! -d "$repository_root/.jj" ]; then
+  jj git init --colocate "$repository_root"
+fi
+
+configure_identity() {
+  key="$1"
+
+  if jj config get "$key" >/dev/null 2>&1; then
+    return 0
+  fi
+
+  value="$(git config --global --get "$key" 2>/dev/null || true)"
+  if [ -n "$value" ]; then
+    jj config set --user "$key" "$value"
+  fi
+}
+
+configure_identity user.name
+configure_identity user.email
