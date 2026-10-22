@@ -1,0 +1,8 @@
+#!/bin/sh
+set -eu
+
+# Configure macOS keyboard settings for fast repeat rate
+# This is user-specific and won't affect other users on this Mac
+
+defaults write NSGlobalDomain InitialKeyRepeat -int 15
+defaults write NSGlobalDomain KeyRepeat -int 2
