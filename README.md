@@ -4,13 +4,32 @@ Public, portable development and agent configuration managed with chezmoi.
 
 ## Install
 
+### New machine
+
+On a new machine, bootstrap your dotfiles with a one-liner:
+
 ```bash
-./install.sh
+curl -fsSL https://raw.githubusercontent.com/mclark/dotfiles/main/install.sh | sh
 ```
 
-The bootstrap installs Homebrew on macOS when needed, installs chezmoi, and
-applies this checkout as the chezmoi source. On Linux, chezmoi is installed as a
-standalone binary in `~/.local/bin`.
+This downloads and runs the bootstrap script, which:
+- Installs Homebrew on macOS (when needed)
+- Installs chezmoi
+- Clones this repo to `~/.local/share/chezmoi`
+- Applies all dotfiles to your home directory
+
+On Linux, chezmoi is installed as a standalone binary in `~/.local/bin`.
+
+### Existing installation
+
+To re-run the bootstrap locally (idempotent):
+
+```bash
+~/.local/share/chezmoi/install.sh
+```
+
+This can be run multiple times safely; it will skip chezmoi and Homebrew
+installation if already present.
 
 Pass `--upgrade` to explicitly upgrade the packages declared in the Brewfile
 after applying the dotfiles:
