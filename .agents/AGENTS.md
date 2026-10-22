@@ -1,5 +1,11 @@
 # Global Instructions
 
+## Safety
+
+When working in public repositories, keep committed content safe to publish: use generic examples and placeholders, and keep secrets, credentials, customer data, internal systems, and private documentation outside the repository.
+
+Before finalizing a change, inspect it for private or company-specific content.
+
 ## Engineering Principles
 
 - Prefer deleting code to reshaping it, and reshaping code to adding it. Choose the first approach that fully solves the problem; new code must justify its ongoing cost.
