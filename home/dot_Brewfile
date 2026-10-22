@@ -4,5 +4,7 @@ brew "jj"
 brew "herdr"
 brew "pi-coding-agent"
 
+cask "1password"
 cask "deezer"
+cask "firefox"
 cask "ghostty"
