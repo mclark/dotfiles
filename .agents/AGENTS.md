@@ -1,13 +1,5 @@
 # Global Instructions
 
-## Multi-Harness Setup
-
-This repository is managed by multiple agent harnesses (Pi, Copilot, and others). This file is symlinked from:
-- `~/.pi/agent/AGENTS.md` (Pi)
-- `~/.copilot/copilot-instructions.md` (Copilot)
-
-Guidance in this file applies across all harnesses. Harness-specific configuration and instruction overrides belong in that harness's own configuration package.
-
 ## Engineering Principles
 
 - Prefer deleting code to reshaping it, and reshaping code to adding it. Choose the first approach that fully solves the problem; new code must justify its ongoing cost.
