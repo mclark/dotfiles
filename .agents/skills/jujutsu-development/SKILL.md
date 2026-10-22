@@ -17,7 +17,9 @@ Preserve working-copy changes and revisions outside the task's intended scope.
 
 ## Choose current mechanics
 
-For nontrivial stack rewrites, conflict resolution, or remote operations, inspect `jj --version` and the relevant `jj help` before acting. Prefer purpose-built commands available in that version over memorized command sequences; treat examples in this skill as fallbacks rather than an exhaustive workflow.
+When uncertain about command options or behavior, use `jj help <command>` to inspect available options, examples, and subcommands before acting. Prefer purpose-built commands available in that version over improvised command sequences; treat examples in this skill as fallbacks rather than an exhaustive workflow.
+
+For nontrivial stack rewrites, conflict resolution, or remote operations, inspect `jj --version` and the relevant `jj help` before acting.
 
 ## Shape the stack
 
