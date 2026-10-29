@@ -11,7 +11,7 @@ Use this workflow to place changes in an intentional revision stack without dist
 
 1. Run `jj status` and inspect the relevant stack with `jj log`.
 2. Select the revision that logically owns the change, or create one when the change is a distinct concern.
-3. Describe each non-empty revision with a concise, outcome-focused subject. When the subject is not self-documenting, add a body explaining why the revision exists, its significant contents, and any important constraints or verification.
+3. Describe each non-empty revision with an outcome-focused subject of at most 72 characters. Default to the subject alone. Include a body when the change involves significant complexity, unconventional decisions, or other departures from what a reader would reasonably expect in the codebase. Focus on why the change took that shape and call out important constraints or gotchas.
 
 Preserve working-copy changes and revisions outside the task's intended scope.
 
