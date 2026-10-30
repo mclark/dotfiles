@@ -10,6 +10,7 @@ Before finalizing a change, inspect it for private or company-specific content.
 
 - Prefer established conventions and patterns over custom solutions. Follow ecosystem conventions (language standards, tool defaults, community patterns) unless there's a compelling reason to deviate.
 - Prefer deleting code to reshaping it, and reshaping code to adding it. Choose the first approach that fully solves the problem; new code must justify its ongoing cost.
+- Make it work, make it right, make it fast, in that order. Optimize only when it's needed, but choose designs that keep a path to fast open.
 
 ## Revision Design
 
