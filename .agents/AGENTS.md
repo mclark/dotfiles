@@ -12,6 +12,7 @@ Before finalizing a change, inspect it for private or company-specific content.
 - Separate concerns by responsibility. Keep behavior orthogonal to a component's primary purpose in composable collaborators or boundary layers rather than mixing it into core logic; keep each part independently understandable and testable.
 - Prefer deleting code to reshaping it, and reshaping code to adding it. Choose the first approach that fully solves the problem; new code must justify its ongoing cost.
 - Make it work, make it right, make it fast, in that order. Optimize only when it's needed, but choose designs that keep a path to fast open.
+- Let repeated evidence justify abstraction. Keep one-off code, behavior corrections, and task-specific guidance local; extract shared code or durable agent guidance when the same underlying pattern recurs. Generalize from a single event only when it reveals meaningful safety or correctness risk.
 
 ## Revision Design
 
