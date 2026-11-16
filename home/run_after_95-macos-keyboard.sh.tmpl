@@ -1,3 +1,4 @@
+{{- if eq .chezmoi.os "darwin" -}}
 #!/bin/sh
 set -eu
 
@@ -6,3 +7,7 @@ set -eu
 
 defaults write NSGlobalDomain InitialKeyRepeat -int 15
 defaults write NSGlobalDomain KeyRepeat -int 2
+{{- else -}}
+#!/bin/sh
+exit 0
+{{- end }}

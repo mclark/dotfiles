@@ -9,13 +9,14 @@ Public, portable development and agent configuration managed with chezmoi.
 On a new machine, bootstrap your dotfiles with a one-liner:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/mclark/dotfiles/main/install.sh | sh
+git clone https://github.com/mclark/dotfiles.git ~/.local/share/chezmoi
+sh ~/.local/share/chezmoi/install.sh
 ```
 
-This downloads and runs the bootstrap script, which:
+This clones the repository and runs the bootstrap script, which:
 - Installs Homebrew on macOS (when needed)
 - Installs chezmoi
-- Clones this repo to `~/.local/share/chezmoi`
+- On Arch Linux, installs the packages listed in `arch/`
 - Applies all dotfiles to your home directory
 
 On Linux, chezmoi is installed as a standalone binary in `~/.local/bin`.
@@ -56,6 +57,52 @@ Chezmoi runs `brew bundle install --no-upgrade` whenever the Brewfile changes.
 It installs missing dependencies without cleaning up unrelated packages or
 forcing upgrades of installed tools. Upgrades occur only when requested with
 `./install.sh --upgrade`.
+
+## Arch Linux tooling
+
+Arch has its own app lists, independent of the macOS Brewfile:
+
+- `arch/packages.txt`: official repository packages (build tools, Git, Node.js, npm)
+- `arch/aur.txt`: AUR packages (currently 1Password)
+- `arch/npm.txt`: user-local npm tools (currently pi)
+
+From this checkout, run:
+
+```bash
+sh ./install.sh
+```
+
+Or install only the Arch apps without applying dotfiles:
+
+```bash
+sh ./arch/install.sh
+```
+
+The installer runs `sudo pacman -Syu --needed`, including a **full system
+upgrade**, to avoid unsupported partial upgrades. Review pacman's transaction
+before confirming. It never removes unrelated packages. Keep package lists to
+one package per line, without comments.
+
+Missing AUR packages are cloned into `~/.cache/dotfiles/aur/` (or
+`$XDG_CACHE_HOME/dotfiles/aur/`). Review the PKGBUILD and supporting files in
+another terminal before typing `yes` to build. Builds run as your regular user;
+`makepkg` requests sudo for dependencies and installation. Existing AUR packages
+are skipped, not upgraded. Maintain their updates separately. A failed or
+cancelled build directory is preserved for inspection; remove it before retrying.
+
+npm tools are installed under `~/.local` without sudo. Existing pi installations
+are preserved, including standalone installs. Ensure `~/.local/bin` is on your
+PATH (the managed Zsh config already does this). For Bash, add this to
+`~/.bashrc` if needed:
+
+```bash
+export PATH="$HOME/.local/bin:$PATH"
+```
+
+The Arch installer requires an interactive terminal and sudo access. It does not
+change your login shell or configure/unlock 1Password. See [SETUP.md](SETUP.md)
+for SSH agent setup. Other Linux distributions only get the existing chezmoi
+bootstrap; these package lists are Arch-specific.
 
 ## Shell
 

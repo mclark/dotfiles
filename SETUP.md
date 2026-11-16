@@ -2,7 +2,7 @@
 
 ## 1Password SSH Agent
 
-After installing 1Password from Brewfile, configure it as your SSH agent for Git authentication.
+After installing 1Password (from the Brewfile on macOS or `arch/aur.txt` on Arch), configure it as your SSH agent for Git authentication.
 
 ### Prerequisites
 
@@ -19,6 +19,13 @@ Create or edit `~/.ssh/config`:
 ```
 Host github.com
    IdentityAgent "~/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"
+```
+
+On Linux, use this socket instead:
+
+```sshconfig
+Host github.com
+   IdentityAgent "~/.1password/agent.sock"
 ```
 
 This configures GitHub to use 1Password's SSH agent socket for authentication.
@@ -38,5 +45,5 @@ After setup, Git operations (clone, pull, push) should prompt for fingerprint au
 - Prerequisites must be completed in 1Password before `~/.ssh/config` setup will work
 - This configuration is kept private in `~/.ssh/config` and not version-controlled
 - 1Password must be running for Git operations to succeed
-- The 1Password app is installed via `brew bundle` from the Brewfile
+- The 1Password app is installed via `brew bundle` on macOS or the AUR on Arch
 - On new machines: install 1Password, restore SSH keys from 1Password backup, enable SSH Agent, then set up `~/.ssh/config`

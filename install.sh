@@ -121,8 +121,15 @@ ensure_chezmoi() {
   esac
 }
 
+if [ "$upgrade" -eq 1 ] && [ "$(uname -s)" != "Darwin" ]; then
+  warn "--upgrade is only supported on macOS; Arch installs already run a full system upgrade"
+  exit 2
+fi
+
 if [ "$(uname -s)" = "Darwin" ]; then
   ensure_homebrew
+elif [ "$(uname -s)" = "Linux" ] && [ -f /etc/arch-release ]; then
+  sh "$DOTFILES_DIR/arch/install.sh"
 fi
 
 ensure_chezmoi
